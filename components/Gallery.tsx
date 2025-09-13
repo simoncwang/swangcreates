@@ -6,6 +6,7 @@ import type { Photo } from "@/lib/galleryLoader";
 
 export default function GalleryComponent({ photos }: { photos: Photo[] }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const closeModal = () => setSelectedIndex(null);
 
@@ -30,6 +31,24 @@ export default function GalleryComponent({ photos }: { photos: Photo[] }) {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedIndex]);
+
+   // Touch swipe handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const deltaX = touchEndX - touchStartX;
+
+    if (deltaX > 50) {
+      showPrev(); // swipe right → previous
+    } else if (deltaX < -50) {
+      showNext(); // swipe left → next
+    }
+    setTouchStartX(null);
+  };
 
   return (
     <>
@@ -61,6 +80,8 @@ export default function GalleryComponent({ photos }: { photos: Photo[] }) {
           <div
             className="relative max-w-5xl w-full flex flex-col items-center" 
             onClick={(e) => e.stopPropagation()}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           >
             {/* Close button */}
             <button
