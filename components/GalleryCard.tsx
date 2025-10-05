@@ -6,7 +6,7 @@ export default function GalleryCard({ gallery }: { gallery: Gallery }) {
     <div className="rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow bg-white">
       {gallery.photos[0] && (
         <Image
-          src={gallery.photos[0].src}
+          src={gallery.photos[14].src}
           alt={gallery.title}
           width={400}
           height={300}

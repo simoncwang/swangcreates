@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="p-6 shadow-md bg-white">
           <nav className="max-w-5xl mx-auto flex justify-center items-center">
             <Link href="/" className="text-xl font-bold hover:underline">
-              swangcreates
+              swangcreates.
             </Link>
           </nav>
         </header>

@@ -10,6 +10,7 @@ export type Gallery = {
   slug: string;   // URL safe
   title: string;  // Display title
   subtitle: string; // Optional subtitle
+  youtube: string; // Optional YouTube videolink
   folder: string; // Actual folder name
   photos: Photo[];
 };
@@ -45,6 +46,7 @@ function loadGallery(folder: string): Gallery {
   // Default values
   let title = folder;
   let subtitle = "";
+  let youtube = "";
   let captions: Record<string, string> = {};
 
   // Look for details.json
@@ -55,6 +57,7 @@ function loadGallery(folder: string): Gallery {
       if (details.title) title = details.title;
       if (details.subtitle) subtitle = details.subtitle;
       if (details.captions) captions = details.captions;
+      if (details.youtube) youtube = details.youtube;
     } catch (err) {
       console.warn(`Invalid details.json in ${folder}`, err);
     }
@@ -89,6 +92,7 @@ function loadGallery(folder: string): Gallery {
     slug,
     title,
     subtitle,
+    youtube,
     folder,
     photos,
   };
