@@ -1,24 +1,28 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Photo } from "@/lib/galleryLoader";
 
 export default function GalleryComponent({ photos }: { photos: Photo[] }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
-  const closeModal = () => setSelectedIndex(null);
+  const closeModal = useCallback(() => setSelectedIndex(null), []);
 
-  const showPrev = () => {
-    if (selectedIndex === null) return;
-    setSelectedIndex((selectedIndex - 1 + photos.length) % photos.length);
-  };
+  const showPrev = useCallback(() => {
+    setSelectedIndex((currentIndex) => {
+      if (currentIndex === null) return null;
+      return (currentIndex - 1 + photos.length) % photos.length;
+    });
+  }, [photos.length]);
 
-  const showNext = () => {
-    if (selectedIndex === null) return;
-    setSelectedIndex((selectedIndex + 1) % photos.length);
-  };
+  const showNext = useCallback(() => {
+    setSelectedIndex((currentIndex) => {
+      if (currentIndex === null) return null;
+      return (currentIndex + 1) % photos.length;
+    });
+  }, [photos.length]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -30,7 +34,22 @@ export default function GalleryComponent({ photos }: { photos: Photo[] }) {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedIndex]);
+  }, [closeModal, selectedIndex, showNext, showPrev]);
+
+  // Preload adjacent optimized images so arrow navigation feels immediate.
+  useEffect(() => {
+    if (selectedIndex === null || photos.length < 2) return;
+
+    const adjacentIndexes = [
+      (selectedIndex - 1 + photos.length) % photos.length,
+      (selectedIndex + 1) % photos.length,
+    ];
+
+    for (const index of adjacentIndexes) {
+      const image = new window.Image();
+      image.src = `/_next/image?url=${encodeURIComponent(photos[index].src)}&w=1920&q=75`;
+    }
+  }, [photos, selectedIndex]);
 
    // Touch swipe handlers for mobile
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -56,7 +75,7 @@ export default function GalleryComponent({ photos }: { photos: Photo[] }) {
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {photos.map((photo, i) => (
           <div
-            key={i}
+            key={photo.src}
             className="overflow-hidden rounded-2xl shadow-md cursor-pointer"
             onClick={() => setSelectedIndex(i)}
           >
@@ -65,6 +84,7 @@ export default function GalleryComponent({ photos }: { photos: Photo[] }) {
               alt={photo.alt}
               width={500}
               height={400}
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
               className="object-cover w-full h-64 hover:scale-105 transition-transform"
             />
           </div>
@@ -92,11 +112,16 @@ export default function GalleryComponent({ photos }: { photos: Photo[] }) {
             </button>
 
             {/* Image */}
-            <img
-              src={photos[selectedIndex].src}
-              alt={photos[selectedIndex].alt}
-              className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
-            />
+            <div className="relative h-[80vh] w-full">
+              <Image
+                src={photos[selectedIndex].src}
+                alt={photos[selectedIndex].alt}
+                fill
+                priority
+                sizes="100vw"
+                className="object-contain"
+              />
+            </div>
 
             {/* Description below the image */}
             {photos[selectedIndex].caption && (
