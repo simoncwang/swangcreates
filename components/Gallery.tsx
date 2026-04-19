@@ -62,7 +62,7 @@ export default function GalleryComponent({ photos }: { photos: Photo[] }) {
           >
             <Image
               src={photo.src}
-              alt={`Photo ${i + 1}`}
+              alt={photo.alt}
               width={500}
               height={400}
               className="object-cover w-full h-64 hover:scale-105 transition-transform"
@@ -94,14 +94,14 @@ export default function GalleryComponent({ photos }: { photos: Photo[] }) {
             {/* Image */}
             <img
               src={photos[selectedIndex].src}
-              alt={`Photo ${selectedIndex + 1}`}
+              alt={photos[selectedIndex].alt}
               className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
             />
 
-            {/* ✅ Description below the image */}
-            {photos[selectedIndex].description && (
+            {/* Description below the image */}
+            {photos[selectedIndex].caption && (
               <p className="mt-4 text-gray-200 text-center text-md max-w-3xl">
-                {photos[selectedIndex].description}
+                {photos[selectedIndex].caption}
               </p>
             )}
 

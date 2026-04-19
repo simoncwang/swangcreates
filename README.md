@@ -16,6 +16,22 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Adding Galleries
+
+Add a new folder under `public/galleries`, drop the image files into it, then run:
+
+```bash
+npm run galleries:sync
+```
+
+This creates or updates `details.json` with the current image filenames, a default cover image, and editable fields for `title`, `subtitle`, `youtube`, `alt`, and `caption`.
+
+To verify gallery metadata without changing files, run:
+
+```bash
+npm run galleries:check
+```
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

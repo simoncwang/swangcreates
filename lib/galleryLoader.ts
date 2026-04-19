@@ -1,18 +1,38 @@
 import fs from "fs";
 import path from "path";
 
+const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"];
+
 export type Photo = {
+  file: string;
   src: string;
-  description?: string;
+  alt: string;
+  caption: string;
 };
 
 export type Gallery = {
   slug: string;   // URL safe
   title: string;  // Display title
-  subtitle: string; // Optional subtitle
-  youtube: string; // Optional YouTube videolink
+  subtitle: string;
+  youtube: string;
+  cover: string;
   folder: string; // Actual folder name
   photos: Photo[];
+};
+
+type GalleryDetails = {
+  title?: unknown;
+  subtitle?: unknown;
+  youtube?: unknown;
+  cover?: unknown;
+  photos?: unknown;
+  captions?: unknown;
+};
+
+type PhotoDetails = {
+  file?: unknown;
+  alt?: unknown;
+  caption?: unknown;
 };
 
 const galleriesDir = path.join(process.cwd(), "public/galleries");
@@ -22,6 +42,66 @@ function slugify(name: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)+/g, "");
+}
+
+function isImageFile(file: string): boolean {
+  return IMAGE_EXTENSIONS.includes(path.extname(file).toLowerCase());
+}
+
+function naturalSort(a: string, b: string): number {
+  const nameA = path.parse(a).name;
+  const nameB = path.parse(b).name;
+
+  const numA = parseInt(nameA, 10);
+  const numB = parseInt(nameB, 10);
+
+  if (!isNaN(numA) && !isNaN(numB)) {
+    return numA - numB;
+  }
+
+  return nameA.localeCompare(nameB, undefined, { numeric: true });
+}
+
+function readDetails(folderPath: string, folder: string): GalleryDetails {
+  const detailsPath = path.join(folderPath, "details.json");
+  if (!fs.existsSync(detailsPath)) return {};
+
+  try {
+    const details = JSON.parse(fs.readFileSync(detailsPath, "utf-8"));
+    if (!details || typeof details !== "object" || Array.isArray(details)) {
+      console.warn(`details.json in ${folder} must be an object.`);
+      return {};
+    }
+    return details;
+  } catch (err) {
+    console.warn(`Invalid details.json in ${folder}`, err);
+    return {};
+  }
+}
+
+function normalizePhotoDetails(details: GalleryDetails): Map<string, PhotoDetails> {
+  const photos = new Map<string, PhotoDetails>();
+
+  if (Array.isArray(details.photos)) {
+    for (const photo of details.photos) {
+      if (!photo || typeof photo !== "object" || Array.isArray(photo)) continue;
+      const photoDetails = photo as PhotoDetails;
+      if (typeof photoDetails.file === "string") {
+        photos.set(photoDetails.file, photoDetails);
+      }
+    }
+  }
+
+  // Backwards compatibility with the previous details.json shape.
+  if (details.captions && typeof details.captions === "object" && !Array.isArray(details.captions)) {
+    for (const [file, caption] of Object.entries(details.captions)) {
+      if (typeof caption === "string" && !photos.has(file)) {
+        photos.set(file, { file, caption });
+      }
+    }
+  }
+
+  return photos;
 }
 
 export function getAllGalleries(): Gallery[] {
@@ -43,56 +123,38 @@ function loadGallery(folder: string): Gallery {
   const folderPath = path.join(galleriesDir, folder);
   const slug = slugify(folder);
 
-  // Default values
-  let title = folder;
-  let subtitle = "";
-  let youtube = "";
-  let captions: Record<string, string> = {};
+  const details = readDetails(folderPath, folder);
+  const photoDetails = normalizePhotoDetails(details);
 
-  // Look for details.json
-  const detailsPath = path.join(folderPath, "details.json");
-  if (fs.existsSync(detailsPath)) {
-    try {
-      const details = JSON.parse(fs.readFileSync(detailsPath, "utf-8"));
-      if (details.title) title = details.title;
-      if (details.subtitle) subtitle = details.subtitle;
-      if (details.captions) captions = details.captions;
-      if (details.youtube) youtube = details.youtube;
-    } catch (err) {
-      console.warn(`Invalid details.json in ${folder}`, err);
-    }
-  }
-
-  const photos = fs
+  const files = fs
     .readdirSync(folderPath)
-    .filter((file) =>
-      [".jpg", ".jpeg", ".png", ".webp"].includes(path.extname(file).toLowerCase())
-    )
-    // ✅ natural sort by number if filename starts with digits
-    .sort((a, b) => {
-      const nameA = path.parse(a).name;
-      const nameB = path.parse(b).name;
+    .filter(isImageFile)
+    .sort(naturalSort);
 
-      const numA = parseInt(nameA, 10);
-      const numB = parseInt(nameB, 10);
+  const fileSet = new Set(files);
+  const cover = typeof details.cover === "string" && fileSet.has(details.cover)
+    ? details.cover
+    : files[0] || "";
 
-      // If both are numbers, compare numerically
-      if (!isNaN(numA) && !isNaN(numB)) {
-        return numA - numB;
-      }
-      // Otherwise, fallback to normal string sort
-      return nameA.localeCompare(nameB, undefined, { numeric: true });
-    })
-    .map((file) => ({
+  const photos = files.map((file) => {
+    const metadata = photoDetails.get(file);
+
+    return {
+      file,
       src: `/galleries/${folder}/${file}`,
-      description: captions[file] || "",
-    }));
+      alt: typeof metadata?.alt === "string" && metadata.alt.trim()
+        ? metadata.alt
+        : `${typeof details.title === "string" && details.title.trim() ? details.title : folder} photo`,
+      caption: typeof metadata?.caption === "string" ? metadata.caption : "",
+    };
+  });
 
   return {
     slug,
-    title,
-    subtitle,
-    youtube,
+    title: typeof details.title === "string" && details.title.trim() ? details.title : folder,
+    subtitle: typeof details.subtitle === "string" ? details.subtitle : "",
+    youtube: typeof details.youtube === "string" ? details.youtube : "",
+    cover,
     folder,
     photos,
   };

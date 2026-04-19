@@ -18,13 +18,13 @@ export default async function GalleryPage({ params }: { params: Promise<{ slug: 
     <section className="space-y-8">
       <div className="pt-4">
         <h2 className="text-3xl font-bold">{gallery.title}</h2>
-        <h3 className="pt-2 text-md text-gray-500">{gallery.subtitle}</h3>
+        <h3 className="pt-2 text-md text-muted">{gallery.subtitle}</h3>
         {gallery.youtube && (
           <a
             href={gallery.youtube}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-lg bg-slate-400 hover:bg-slate-600 text-white font-semibold transition-all"
+            className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-accent-foreground font-semibold transition-colors"
           >
             <FontAwesomeIcon icon={faYoutube} className="w-5 h-5" />
             <span>Watch on YouTube</span>

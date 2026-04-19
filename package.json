@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "galleries:sync": "node scripts/sync-galleries.mjs",
+    "galleries:check": "node scripts/sync-galleries.mjs --check"
   },
   "dependencies": {
     "@fortawesome/free-brands-svg-icons": "^7.1.0",

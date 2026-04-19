@@ -2,13 +2,122 @@
   "title": "Hokkaido, Japan Pt.1: Furano & Biei",
   "subtitle": "Gear: Panasonic Lumix S1RII w/ Lumix S 24-105mm | 08-11-2025",
   "youtube": "https://youtu.be/hCOAUgdhhmo",
-  "captions": {
-    "1.JPG": "Farm Furano — Lumix S1RII, 24mm f/7.1, 1/320s, ISO 80",
-    "2.JPG": "Farm Furano — Lumix S1RII, 89mm f/4, 1/100s, ISO 160",
-    "3.JPG": "Farm Furano — Lumix S1RII, 57mm f/4.5, 1/500s, ISO 80",
-    "4.JPG": "Shikisai no Oka — Lumix S1RII, 34mm f/7.1, 1/320s, ISO 80",
-    "5.JPG": "Shikisai no Oka — Lumix S1RII, 102mm f/4, 1/250s, ISO 80",
-    "6.JPG": "Blue Pond (Aoi-Ike) — Lumix S1RII, 24mm f/7.1, 1/250s, ISO 80",
-    "7.JPG": "Blue Pond (Aoi-Ike) — Lumix S1RII, 53mm f/4.5, 1/125s, ISO 80"
-  }
+  "cover": "01.jpg",
+  "photos": [
+    {
+      "file": "01.jpg",
+      "alt": "",
+      "caption": "Farm Furano — Lumix S1RII, 24mm f/7.1, 1/320s, ISO 80"
+    },
+    {
+      "file": "02.jpg",
+      "alt": "",
+      "caption": "Farm Furano — Lumix S1RII, 89mm f/4, 1/100s, ISO 160"
+    },
+    {
+      "file": "03.jpeg",
+      "alt": "",
+      "caption": "Farm Furano — Lumix S1RII, 57mm f/4.5, 1/500s, ISO 80"
+    },
+    {
+      "file": "04.jpg",
+      "alt": "",
+      "caption": "Shikisai no Oka — Lumix S1RII, 34mm f/7.1, 1/320s, ISO 80"
+    },
+    {
+      "file": "05.jpg",
+      "alt": "",
+      "caption": "Shikisai no Oka — Lumix S1RII, 102mm f/4, 1/250s, ISO 80"
+    },
+    {
+      "file": "06.jpg",
+      "alt": "",
+      "caption": "Blue Pond (Aoi-Ike) — Lumix S1RII, 24mm f/7.1, 1/250s, ISO 80"
+    },
+    {
+      "file": "07.jpg",
+      "alt": "",
+      "caption": "Blue Pond (Aoi-Ike) — Lumix S1RII, 53mm f/4.5, 1/125s, ISO 80"
+    },
+    {
+      "file": "08.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "09.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "10.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "11.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "12.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "13.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "14.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "15.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "16.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "17.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "18.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "19.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "20.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "21.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "22.jpg",
+      "alt": "",
+      "caption": ""
+    },
+    {
+      "file": "23.jpg",
+      "alt": "",
+      "caption": ""
+    }
+  ]
 }
